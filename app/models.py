@@ -5,8 +5,8 @@ class Questions(db.Model):
     __tablename__ = 'questions'
 
 
-class User(db.Model):
-    __tablename__ = 'user'
+class Users(db.Model):
+    __tablename__ = 'users'
 
 
 class TestHistory(db.Model):
