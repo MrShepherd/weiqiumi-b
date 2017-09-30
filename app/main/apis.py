@@ -1,10 +1,12 @@
 import random
 
+from flask import json
 from flask import request, jsonify
+from datetime import datetime
 
 from . import main
 from .. import db
-from ..models import Questions, Users
+from ..models import Questions, Users, TestHistory
 
 
 @main.route('/')
@@ -42,7 +44,8 @@ def questions():
     category_picked = []
     for difficulty in all_difficulty:
         # print(category_picked)
-        temp_question = db.session.query(Questions.id, Questions.category).filter(Questions.typekey == typekey, Questions.typevalue == typevalue, Questions.difficulty == difficulty).filter(~Questions.category.in_(category_picked)).all()
+        temp_question = db.session.query(Questions.id, Questions.category).filter(Questions.typekey == typekey, Questions.typevalue == typevalue, Questions.difficulty == difficulty).filter(
+            ~Questions.category.in_(category_picked)).all()
         # print(temp_question)
         temp_question = random.sample(temp_question, 1)
         # print(temp_question)
@@ -67,5 +70,35 @@ def questions():
         # print(temp_list)
         temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'optionA': temp_list[0], 'optionB': temp_list[1], 'optionC': temp_list[2], 'optionD': temp_list[3]}
         result.append(temp_dict)
-    print(result)
+    # print(result)
+    return jsonify(result)
+
+
+@main.route('/api/mark', methods=['POST'])
+def mark():
+    data = json.loads(request.data)
+    answers = data['answers']
+    # print(answers)
+    rightnum = 0
+    wrongnum = 0
+    totalmark = 0
+    mark_dict = {'容易': 3, '简单': 4, '苦难': 5, '变态': 6}
+    for answer in answers:
+        question = db.session.query(Questions.id, Questions.answer, Questions.difficulty, Questions.righttimes, Questions.wrongtimes).filter(Questions.id == answer['id']).first()
+        righttimes = question[3]
+        wrongtimes = question[4]
+        if question[1] == answer['answer']:
+            rightnum += 1
+            righttimes += 1
+            totalmark += mark_dict[question[2]]
+        else:
+            wrongnum += 1
+            wrongtimes += 1
+        new_question = Questions(id=question[0], righttimes=righttimes, wrongtimes=wrongtimes)
+        db.session.merge(new_question)
+    new_test_history = TestHistory(openid=data['openid'], date=datetime.strptime(data['date'], '%m/%d/%Y').strftime('%Y-%m-%d'), times=data['times'], typekey=data['typekey'],
+                                   typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum, mark=min(totalmark, 100), timestart=data['timestart'], timeend=data['timeend'],
+                                   timecost=(datetime.strptime(data['timeend'], '%H:%M:%S') - datetime.strptime(data['timestart'], '%H:%M:%S')).seconds)
+    db.session.merge(new_test_history)
+    result = {'rightnum': rightnum, 'wrongnum': wrongnum, 'mark': min(totalmark, 100)}
     return jsonify(result)
