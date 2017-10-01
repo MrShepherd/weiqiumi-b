@@ -96,8 +96,8 @@ def mark():
             wrongtimes += 1
         new_question = Questions(id=question[0], righttimes=righttimes, wrongtimes=wrongtimes)
         db.session.merge(new_question)
-    new_test_history = TestHistory(openid=data['openid'], date=datetime.strptime(data['date'], '%m/%d/%Y').strftime('%Y-%m-%d'), times=data['times'], typekey=data['typekey'],
-                                   typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum, mark=min(totalmark, 100), timestart=data['timestart'], timeend=data['timeend'],
+    new_test_history = TestHistory(openid=data['openid'], date=data['date'], times=data['times'], typekey=data['typekey'], typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum,
+                                   mark=min(totalmark, 100), timestart=data['timestart'], timeend=data['timeend'],
                                    timecost=(datetime.strptime(data['timeend'], '%H:%M:%S') - datetime.strptime(data['timestart'], '%H:%M:%S')).seconds)
     db.session.merge(new_test_history)
     result = {'rightnum': rightnum, 'wrongnum': wrongnum, 'mark': min(totalmark, 100)}
@@ -112,7 +112,7 @@ def grade():
     # print(answers)
     grade_result = data['mark'] // 5
     result = {'answers': answers, 'grade': grade_result}
-    new_grade_history = GradeHistory(openid=data['openid'], date=datetime.strptime(data['date'], '%m/%d/%Y').strftime('%Y-%m-%d'), times=data['times'], typekey=data['typekey'],
+    new_grade_history = GradeHistory(openid=data['openid'], date=data['date'], times=data['times'], typekey=data['typekey'],
                                      typevalue=data['typevalue'], grade=grade_result)
     db.session.merge(new_grade_history)
     return jsonify(result)
