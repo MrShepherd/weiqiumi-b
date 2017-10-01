@@ -6,7 +6,7 @@ from datetime import datetime
 
 from . import main
 from .. import db
-from ..models import Questions, Users, TestHistory
+from ..models import Questions, Users, TestHistory, GradeHistory
 
 
 @main.route('/')
@@ -101,4 +101,18 @@ def mark():
                                    timecost=(datetime.strptime(data['timeend'], '%H:%M:%S') - datetime.strptime(data['timestart'], '%H:%M:%S')).seconds)
     db.session.merge(new_test_history)
     result = {'rightnum': rightnum, 'wrongnum': wrongnum, 'mark': min(totalmark, 100)}
+    return jsonify(result)
+
+
+@main.route('/api/grade', methods=['POST'])
+def grade():
+    data = json.loads(request.data)
+    rows = db.session.query(Questions.id, Questions.answer).filter(Questions.id.in_(data['questions'])).all()
+    answers = [{'id': row[0], 'answer': row[1]} for row in rows]
+    # print(answers)
+    grade_result = data['mark'] // 5
+    result = {'answers': answers, 'grade': grade_result}
+    new_grade_history = GradeHistory(openid=data['openid'], date=datetime.strptime(data['date'], '%m/%d/%Y').strftime('%Y-%m-%d'), times=data['times'], typekey=data['typekey'],
+                                     typevalue=data['typevalue'], grade=grade_result)
+    db.session.merge(new_grade_history)
     return jsonify(result)
