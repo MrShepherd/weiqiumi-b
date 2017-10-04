@@ -32,7 +32,7 @@ def userinfo():
     return 'hello'
 
 
-@main.route('/api/questions', methods=['GET'])
+@main.route('/api/questions', methods=['POST'])
 def questions():
     typekey = request.values.get('typekey')
     typevalue = request.values.get('typevalue')
@@ -41,7 +41,7 @@ def questions():
     # all_difficulty = ['变态'] * 3 + ['困难'] * 5 + ['简单'] * 7 + ['容易'] * 10
     all_difficulty = ['变态'] * 2 + ['困难'] * 3 + ['简单'] * 4 + ['容易'] * 5
     question_ids_picked = []
-    category_picked = []
+    category_picked = [999999999]
     for difficulty in all_difficulty:
         # print(category_picked)
         temp_question = db.session.query(Questions.id, Questions.category).filter(Questions.typekey == typekey, Questions.typevalue == typevalue, Questions.difficulty == difficulty).filter(
