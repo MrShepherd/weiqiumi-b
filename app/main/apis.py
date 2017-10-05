@@ -6,7 +6,7 @@ from datetime import datetime
 
 from . import main
 from .. import db
-from ..models import Questions, Users, TestHistory, GradeHistory
+from ..models import Questions, Users, TestHistory, GradeHistory, Articles
 
 
 @main.route('/')
@@ -112,7 +112,13 @@ def grade():
     # print(answers)
     grade_result = data['mark'] // 5
     result = {'answers': answers, 'grade': grade_result}
-    new_grade_history = GradeHistory(openid=data['openid'], date=data['date'], times=data['times'], typekey=data['typekey'],
-                                     typevalue=data['typevalue'], grade=grade_result)
+    new_grade_history = GradeHistory(openid=data['openid'], date=data['date'], times=data['times'], typekey=data['typekey'], typevalue=data['typevalue'], grade=grade_result)
     db.session.merge(new_grade_history)
     return jsonify(result)
+
+
+@main.route('/api/article', methods=['POST'])
+def article():
+    rows = db.session.query(Articles.id, Articles.title, Articles.abbr, Articles.content, Articles.image).filter(Articles.enable == 1).order_by(Articles.id.desc()).all()
+    articles = [{'id': row[0], 'title': row[1], 'abbr': row[2], 'content': row[3], 'image': row[4]} for row in rows]
+    return jsonify(articles)

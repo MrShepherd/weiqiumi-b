@@ -23,3 +23,7 @@ class GradeHistory(db.Model):
 
 class InviteCode(db.Model):
     __tablename__ = 'invitecode'
+
+
+class Articles(db.Model):
+    __tablename__ = 'articles'
