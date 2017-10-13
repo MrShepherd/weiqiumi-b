@@ -39,7 +39,7 @@ def questions():
     # print(typekey)
     # print(typevalue)
     # all_difficulty = ['变态'] * 3 + ['困难'] * 5 + ['简单'] * 7 + ['容易'] * 10
-    all_difficulty = ['变态'] * 2 + ['困难'] * 3 + ['简单'] * 4 + ['容易'] * 5
+    all_difficulty = ['变态'] * 1 + ['困难'] * 2 + ['简单'] * 3 + ['容易'] * 4
     question_ids_picked = []
     category_picked = [999999999]
     for difficulty in all_difficulty:
