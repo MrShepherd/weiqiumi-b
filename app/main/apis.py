@@ -97,7 +97,7 @@ def mark():
             wrongtimes += 1
         new_question = Questions(id=question[0], righttimes=righttimes, wrongtimes=wrongtimes)
         db.session.merge(new_question)
-    new_test_history = TestHistory(openid=data['openid'], date=data['date'], times=data['times'], typekey=data['typekey'], typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum,
+    new_test_history = TestHistory(openid=data['openid'], date=data['date'],  typekey=data['typekey'], typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum,
                                    mark=min(totalmark, 100), timestart=data['timestart'], timeend=data['timeend'],
                                    timecost=(datetime.strptime(data['timeend'], '%H:%M:%S') - datetime.strptime(data['timestart'], '%H:%M:%S')).seconds)
     db.session.merge(new_test_history)
