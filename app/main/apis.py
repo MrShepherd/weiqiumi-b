@@ -39,7 +39,7 @@ def questions():
     # print(typekey)
     # print(typevalue)
     # all_difficulty = ['变态'] * 3 + ['困难'] * 5 + ['简单'] * 7 + ['容易'] * 10
-    all_difficulty = ['变态'] * 1 + ['困难'] * 2 + ['简单'] * 3 + ['容易'] * 4
+    all_difficulty = ['变态'] * 1 + ['困难'] * 2 + ['简单'] * 1 + ['容易'] * 2
     question_ids_picked = []
     category_picked = [999999999]
     for difficulty in all_difficulty:
@@ -82,11 +82,12 @@ def mark():
     rightnum = 0
     wrongnum = 0
     totalmark = 0
-    mark_dict = {'容易': 3, '简单': 4, '苦难': 5, '变态': 6}
+    mark_dict = {'容易': 3, '简单': 4, '困难': 5, '变态': 6}
     for answer in answers:
         question = db.session.query(Questions.id, Questions.answer, Questions.difficulty, Questions.righttimes, Questions.wrongtimes).filter(Questions.id == answer['id']).first()
         righttimes = question[3]
         wrongtimes = question[4]
+        # print(question[2])
         if question[1] == answer['answer']:
             rightnum += 1
             righttimes += 1
