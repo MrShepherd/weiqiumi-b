@@ -82,7 +82,6 @@ def mark():
     rightnum = 0
     wrongnum = 0
     totalmark = 0
-    timecost = 0
     mark_dict = {'容易': 3, '简单': 4, '困难': 5, '变态': 6}
     for answer in answers:
         question = db.session.query(Questions.id, Questions.answer, Questions.difficulty, Questions.righttimes, Questions.wrongtimes).filter(Questions.id == answer['id']).first()
@@ -98,11 +97,13 @@ def mark():
             wrongtimes += 1
         new_question = Questions(id=question[0], righttimes=righttimes, wrongtimes=wrongtimes)
         db.session.merge(new_question)
+    timestart = datetime.strptime(data['timestart'], '%H:%M:%S').strftime('%H:%M:%S')
+    timeend = datetime.strptime(data['timeend'], '%H:%M:%S').strftime('%H:%M:%S')
     timecost = (datetime.strptime(data['timeend'], '%H:%M:%S') - datetime.strptime(data['timestart'], '%H:%M:%S')).seconds
     new_test_history = TestHistory(openid=data['openid'], date=data['date'], typekey=data['typekey'], typevalue=data['typevalue'], rightnum=rightnum, wrongnum=wrongnum, mark=min(totalmark, 100),
-                                   timestart=data['timestart'], timeend=data['timeend'], timecost=timecost)
+                                   timestart=timestart, timeend=timeend, timecost=timecost)
     db.session.merge(new_test_history)
-    result = {'rightnum': rightnum, 'wrongnum': wrongnum, 'mark': min(totalmark, 100), 'timecost': timecost}
+    result = {'rightnum': rightnum, 'wrongnum': wrongnum, 'mark': min(totalmark, 100), 'timecost': timecost, 'timestart': timestart, 'timeend': timeend}
     return jsonify(result)
 
 
