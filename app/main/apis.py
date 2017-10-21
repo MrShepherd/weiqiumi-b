@@ -110,7 +110,8 @@ def mark():
 @main.route('/api/grade', methods=['POST'])
 def grade():
     data = json.loads(request.data)
-    rows = db.session.query(Questions.id, Questions.answer).filter(Questions.id.in_(data['questions'])).all()
+    question_ids = [item['id'] for item in data['questions']]
+    rows = db.session.query(Questions.id, Questions.answer).filter(Questions.id.in_(question_ids)).all()
     answers = [{'id': row[0], 'answer': row[1]} for row in rows]
     # print(answers)
     grade_result = data['mark'] // 5
