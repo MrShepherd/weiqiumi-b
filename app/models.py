@@ -27,3 +27,7 @@ class InviteCode(db.Model):
 
 class Articles(db.Model):
     __tablename__ = 'articles'
+
+
+class Issues(db.Model):
+    __tablename__ = 'issues'

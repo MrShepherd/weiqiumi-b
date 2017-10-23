@@ -1,12 +1,11 @@
 import random
-
-from flask import json
-from flask import request, jsonify
 from datetime import datetime
+
+from flask import json, request, jsonify
 
 from . import main
 from .. import db
-from ..models import Questions, Users, TestHistory, GradeHistory, Articles
+from ..models import Questions, Users, TestHistory, GradeHistory, Articles, Issues
 
 
 @main.route('/')
@@ -126,3 +125,14 @@ def article():
     rows = db.session.query(Articles.id, Articles.title, Articles.abbr, Articles.content, Articles.image).filter(Articles.enable == 1).order_by(Articles.id.desc()).all()
     articles = [{'id': row[0], 'title': row[1], 'abbr': row[2], 'content': row[3], 'image': row[4]} for row in rows]
     return jsonify(articles)
+
+
+@main.route('/api/issues', methods=['POST'])
+def issues():
+    openid = request.values.get('openid')
+    title = request.values.get('title')
+    content = request.values.get('content')
+    issuedate = datetime.now().strftime('%Y-%m-%d')
+    new_issue = Issues(id=None, openid=openid, title=title, issuedate=issuedate, content=content)
+    db.session.merge(new_issue)
+    return 'ok'
