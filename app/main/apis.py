@@ -67,7 +67,7 @@ def questions():
         # print(temp_list)
         random.shuffle(temp_list)
         # print(temp_list)
-        temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'optionA': temp_list[0], 'optionB': temp_list[1], 'optionC': temp_list[2], 'optionD': temp_list[3]}
+        temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'option': temp_list}
         result.append(temp_dict)
     # print(result)
     return jsonify(result)
@@ -163,7 +163,7 @@ def study():
         # print(temp_list)
         random.shuffle(temp_list)
         # print(temp_list)
-        temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'optionA': temp_list[0], 'optionB': temp_list[1], 'optionC': temp_list[2], 'optionD': temp_list[3]}
+        temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'option': temp_list}
         result.append(temp_dict)
     # print(result)
     return jsonify(result)
