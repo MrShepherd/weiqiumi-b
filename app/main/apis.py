@@ -140,7 +140,30 @@ def issues():
 
 @main.route('/api/study', methods=['POST'])
 def study():
-    typekey = request.values.get('typekey')
-    typevalue = request.values.get('typevalue')
-    rows = db.session.query(Questions.id, Questions.title, Questions.image, Questions.answer, Questions.optionlist).filter(Questions.typekey == typekey, Questions.typevalue == typevalue).all()
-    return jsonify(rows)
+    data = json.loads(request.data)
+    typekey = data.get('typekey')
+    typevalue = data.get('typevalue')
+    id_learned = data.get('id_learned')
+    # print(id_learned)
+    temp_questions = db.session.query(Questions.id, Questions.title, Questions.image, Questions.answer, Questions.optionlist).filter(Questions.typekey == typekey,
+                                                                                                                                     Questions.typevalue == typevalue).filter(
+        ~Questions.id.in_(id_learned)).all()
+    result = []
+    for temp_question in temp_questions:
+        temp_list = temp_question[4].split('-')
+        # print(temp_list)
+        try:
+            temp_list.remove(temp_question[3])
+        except Exception:
+            pass
+        # print(temp_list)
+        temp_list = random.sample(temp_list, 3)
+        # print(temp_list)
+        temp_list.append(temp_question[3])
+        # print(temp_list)
+        random.shuffle(temp_list)
+        # print(temp_list)
+        temp_dict = {'id': temp_question[0], 'title': temp_question[1], 'image': temp_question[2], 'optionA': temp_list[0], 'optionB': temp_list[1], 'optionC': temp_list[2], 'optionD': temp_list[3]}
+        result.append(temp_dict)
+    # print(result)
+    return jsonify(result)
