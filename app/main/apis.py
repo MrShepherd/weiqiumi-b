@@ -136,3 +136,11 @@ def issues():
     new_issue = Issues(id=None, openid=openid, title=title, issuedate=issuedate, content=content)
     db.session.merge(new_issue)
     return 'ok'
+
+
+@main.route('/api/study', methods=['POST'])
+def study():
+    typekey = request.values.get('typekey')
+    typevalue = request.values.get('typevalue')
+    rows = db.session.query(Questions.id, Questions.title, Questions.image, Questions.answer, Questions.optionlist).filter(Questions.typekey == typekey, Questions.typevalue == typevalue).all()
+    return jsonify(rows)
