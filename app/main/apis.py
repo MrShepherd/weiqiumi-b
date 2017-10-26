@@ -5,7 +5,7 @@ from flask import json, request, jsonify
 
 from . import main
 from .. import db
-from ..models import Questions, Users, TestHistory, GradeHistory, Articles, Issues
+from ..models import Questions, Users, TestHistory, GradeHistory, Articles, Issues, TestCode
 
 
 @main.route('/')
@@ -23,12 +23,16 @@ def userinfo():
     # print(request.values.get('city'))
     # print(request.values.get('province'))
     # print(request.values.get('avatarurl'))
-    user = Users(openid=request.values.get('openid'), nickname=request.values.get('nickname'), gender=request.values.get('gender'), city=request.values.get('city'),
-                 province=request.values.get('province'), avatarurl=request.values.get('avatarurl'))
+    openid = request.values.get('openid')
+    user = Users(openid=openid, nickname=request.values.get('nickname'), gender=request.values.get('gender'), city=request.values.get('city'), province=request.values.get('province'),
+                 avatarurl=request.values.get('avatarurl'))
     db.session.merge(user)
     # user = Users(openid=request.values.get('openid'), dongqiudiID='1000')
     # db.session.merge(user)
-    return 'hello'
+    result = {}
+    rows = db.session.query(TestCode.code).filter(TestCode.openid == openid, TestCode.enable == 1).all()
+    result['testcode'] = [item[0] for item in rows]
+    return jsonify(result)
 
 
 @main.route('/api/questions', methods=['POST'])

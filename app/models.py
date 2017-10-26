@@ -21,8 +21,8 @@ class GradeHistory(db.Model):
     __tablename__ = 'gradehistory'
 
 
-class InviteCode(db.Model):
-    __tablename__ = 'invitecode'
+class TestCode(db.Model):
+    __tablename__ = 'testcode'
 
 
 class Articles(db.Model):
