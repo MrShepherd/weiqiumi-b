@@ -32,8 +32,11 @@ def userinfo():
     result = {}
     rows = db.session.query(TestCode.code).filter(TestCode.openid == openid, TestCode.enable == 1).all()
     result['testcode'] = [item[0] for item in rows]
-    rows = db.session.query(GradeHistory.date, GradeHistory.gradetime, GradeHistory.grade, GradeHistory.typevalue).filter(GradeHistory.openid == openid).order_by(GradeHistory.date, GradeHistory.gradetime).all()
-    result['honor'] = [{'gradedate': item[0].strftime('%Y-%m-%d'), 'gradetime': item[1].strftime('%H:%M:%S'), 'gradeteam': item[3], 'grade': item[2]} for item in rows]
+    rows = db.session.query(GradeHistory.date, GradeHistory.gradetime, GradeHistory.grade, GradeHistory.typevalue).filter(GradeHistory.openid == openid).order_by(GradeHistory.date,
+                                                                                                                                                                  GradeHistory.gradetime).all()
+    result['gradehistory'] = [{'gradedate': item[0].strftime('%Y-%m-%d'), 'gradetime': item[1].strftime('%H:%M:%S'), 'gradeteam': item[3], 'grade': item[2]} for item in rows]
+    rows = db.session.query(GradeHistory.grade, GradeHistory.typevalue).filter(GradeHistory.openid == openid).order_by(GradeHistory.grade).all()
+    result['honor'] = [{'team': item[1], 'grade': item[0]} for item in rows]
     return jsonify(result)
 
 
