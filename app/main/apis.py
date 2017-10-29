@@ -184,3 +184,32 @@ def study():
         result.append(temp_dict)
     # print(result)
     return jsonify(result)
+
+
+@main.route('/api/testcode', methods=['POST'])
+def testcode():
+    openid = request.values.get('openid')
+    result = {}
+    rows = db.session.query(TestCode.code).filter(TestCode.openid == openid, TestCode.enable == 1).all()
+    result['testcode'] = [item[0] for item in rows]
+    return jsonify(result)
+
+
+@main.route('/api/honor', methods=['POST'])
+def honor():
+    openid = request.values.get('openid')
+    result = {}
+    rows = db.session.execute('select max(grade),typevalue from gradehistory where openid="%s" group by typevalue  order by max(grade) DESC ' % openid)
+    # print(rows)
+    result['honor'] = [{'team': item[1], 'grade': item[0]} for item in rows]
+    return jsonify(result)
+
+
+@main.route('/api/gradehistory', methods=['POST'])
+def gradehistory():
+    openid = request.values.get('openid')
+    result = {}
+    rows = db.session.query(GradeHistory.date, GradeHistory.gradetime, GradeHistory.grade, GradeHistory.typevalue).filter(GradeHistory.openid == openid).order_by(GradeHistory.date,
+                                                                                                                                                                  GradeHistory.gradetime).all()
+    result['gradehistory'] = [{'gradedate': item[0].strftime('%Y-%m-%d'), 'gradetime': item[1].strftime('%H:%M:%S'), 'gradeteam': item[3], 'grade': item[2]} for item in rows]
+    return jsonify(result)
