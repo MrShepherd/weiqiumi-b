@@ -160,7 +160,7 @@ def study():
     data = json.loads(request.data)
     typekey = data.get('typekey')
     typevalue = data.get('typevalue')
-    id_learned = data.get('id_learned')
+    id_learned = data.get('id_learned') + [9999999]
     # print(id_learned)
     temp_questions = db.session.query(Questions.id, Questions.title, Questions.image, Questions.answer, Questions.optionlist).filter(Questions.typekey == typekey,
                                                                                                                                      Questions.typevalue == typevalue).filter(
