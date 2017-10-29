@@ -119,12 +119,19 @@ def mark():
 @main.route('/api/grade', methods=['POST'])
 def grade():
     data = json.loads(request.data)
+    openid = data['openid']
+    team = data['typevalue']
     question_ids = [item['id'] for item in data['questions']]
     rows = db.session.query(Questions.id, Questions.answer).filter(Questions.id.in_(question_ids)).all()
     answers = [{'id': row[0], 'answer': row[1]} for row in rows]
-    # print(answers)
+    row = db.session.execute('select max(grade) from gradehistory where openid="%s" and typevalue="%s" ' % (openid, team))
+    # print(row.fetchone())
+    try:
+        grade_max = row.fetchone()[0]
+    except Exception as e:
+        grade_max = 0
     grade_result = data['mark'] // 5
-    result = {'answers': answers, 'grade': grade_result}
+    result = {'answers': answers, 'grade_result': grade_result, 'grade_max': grade_max}
     new_grade_history = GradeHistory(openid=data['openid'], date=data['date'], gradetime=data['gradetime'], typekey=data['typekey'], typevalue=data['typevalue'], grade=grade_result)
     db.session.merge(new_grade_history)
     return jsonify(result)
