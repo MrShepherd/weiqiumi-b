@@ -1,6 +1,8 @@
+import os
 import random
 from datetime import datetime
 
+from flask import Response
 from flask import json, request, jsonify
 
 from . import main
@@ -213,3 +215,19 @@ def gradehistory():
                                                                                                                                                                   db.desc(GradeHistory.gradetime)).all()
     result['gradehistory'] = [{'gradedate': item[0].strftime('%Y-%m-%d'), 'gradetime': item[1].strftime('%H:%M:%S'), 'gradeteam': item[3], 'grade': item[2]} for item in rows]
     return jsonify(result)
+
+
+@main.route('/api/homeimages', methods=['POST'])
+def homeimage():
+    result = {'homeimages': ['league.jpg', 'baobei.jpg', 'water.jpg', 'keeper.jpg']}
+    return jsonify(result)
+
+
+@main.route("/image/<imagename>", methods=['GET'])
+def images(imagename):
+    image = None
+    base_dir = os.path.dirname(__file__)
+    with open(os.path.join(base_dir, 'images/' + imagename), 'rb') as fr:
+        image = fr.read()
+    resp = Response(image, mimetype="image/jpeg")
+    return resp
