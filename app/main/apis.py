@@ -218,7 +218,7 @@ def gradehistory():
 
 
 @main.route('/api/homeimages', methods=['POST'])
-def homeimage():
+def homeimages():
     result = {'homeimages': ['league.jpg', 'baobei.jpg', 'water.jpg', 'keeper.jpg']}
     return jsonify(result)
 
