@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `gradehistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gradehistory` (
-  `openid` varchar(1000) NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL COMMENT '用户ID',
   `date` date NOT NULL COMMENT '日期',
   `gradetime` time NOT NULL COMMENT '时间',
   `grade` int(11) DEFAULT NULL COMMENT '等级',
@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS `issues`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `issues` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `openid` varchar(1000) NOT NULL COMMENT '用户编号',
+  `openid` varchar(200) NOT NULL COMMENT '用户编号',
   `title` varchar(200) NOT NULL COMMENT '反馈标题',
   `content` varchar(1000) DEFAULT NULL COMMENT '反馈内容',
   `issuedate` date NOT NULL COMMENT '反馈日期',
@@ -110,7 +110,7 @@ DROP TABLE IF EXISTS `payhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `payhistory` (
-  `openid` varchar(1000) NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL COMMENT '用户ID',
   `date` date NOT NULL COMMENT '日期',
   `paytime` time NOT NULL COMMENT '支付时间',
   `amount` float DEFAULT NULL COMMENT '金额',
@@ -171,7 +171,7 @@ DROP TABLE IF EXISTS `testcode`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `testcode` (
   `code` varchar(100) NOT NULL COMMENT '测试码',
-  `openid` varchar(1000) DEFAULT NULL,
+  `openid` varchar(200) DEFAULT NULL,
   `enable` int(11) NOT NULL COMMENT '有效值',
   PRIMARY KEY (`code`),
   KEY `fk_invitecode_user_idx` (`openid`),
@@ -197,7 +197,7 @@ DROP TABLE IF EXISTS `testhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `testhistory` (
-  `openid` varchar(1000) NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL COMMENT '用户ID',
   `date` date NOT NULL COMMENT '日期',
   `rightnum` int(11) DEFAULT NULL COMMENT '正确数量',
   `wrongnum` int(11) DEFAULT NULL COMMENT '错误数量',
@@ -231,7 +231,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `openid` varchar(1000) NOT NULL COMMENT '用户ID',
+  `openid` varchar(200) NOT NULL COMMENT '用户ID',
   `nickname` varchar(100) DEFAULT NULL COMMENT '微信昵称',
   `gender` int(11) DEFAULT NULL COMMENT '性别',
   `city` varchar(100) DEFAULT NULL COMMENT '城市',
@@ -264,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-31 23:21:32
+-- Dump completed on 2017-11-01  9:43:24
