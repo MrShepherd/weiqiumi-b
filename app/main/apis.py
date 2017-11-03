@@ -1,9 +1,9 @@
 import os
 import random
+import urllib.request
 from datetime import datetime
 
-from flask import Response
-from flask import json, request, jsonify
+from flask import Response, json, request, jsonify
 
 from . import main
 from .. import db
@@ -15,6 +15,20 @@ def index():
     # return '<h1>hello world</h1>'
     testcnt = db.session.query(Questions.title).first()
     return '<h1>%s</h1>' % testcnt
+
+
+@main.route('/api/openid', methods=['POST'])
+def openid():
+    appid = 'wx00efb8f67036492e'
+    appsecret = '7a98ad0be880ee85912e15e518a9ad40'
+    js_code = request.values.get('js_code')
+    grant_type = 'authorization_code'
+    url = 'https://api.weixin.qq.com/sns/jscode2session'
+    # print(js_code)
+    req = urllib.request.Request(url + '?appid=%s&secret=%s&js_code=%s&grant_type=%s' % (appid, appsecret, js_code, grant_type))
+    with urllib.request.urlopen(req) as res_data:
+        res = res_data.read()
+    return res
 
 
 @main.route('/api/userinfo', methods=['POST'])
